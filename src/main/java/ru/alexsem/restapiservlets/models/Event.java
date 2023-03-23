@@ -39,4 +39,8 @@ public class Event {
         this.user = user;
         this.file = file;
     }
+    /**
+     * Попробовать метод load()
+     * Возможно создать метод в модели (см Cascade)
+     */
 }

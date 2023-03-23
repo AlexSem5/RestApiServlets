@@ -28,8 +28,8 @@ public class User {
     @Column(name = "name")
     private String name;
     
-//  Название поля с аннотацией @JoinColumn в доч таблице:
-//  (cсылаемся на поле owning side)
+//  Lazy - связанные товары загрузятся только по запросу (вызов геттера)
+//  Ссылаемся на поле owning side с аннотацией @JoinColumn в доч таблице
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     //Если сохраняем человека, то автоматически сохраняется связанная сущность
 //    Можем добавить каскадир других операций (on delete уже настроено на стороне БД)
@@ -41,16 +41,32 @@ public class User {
     }
     
     /**
-     * В DAO в каждом круд методе нужно будет открывать и закрывать
-     * транзакцию.
-     * По умолчанию класс Configuration читает конфигурацию из hibernate.properties
-     * Вынести в отдельный метод:
-     * Configuration configuration = new Configuration().addAnnotatedClass(Person.class);
-     *         SessionFactory sessionFactory = configuration.buildSessionFactory();
-     *         Вернуть sessionFactory и использовать во всех методах
-     *         (см класс PersonDAO в SpringHiberApp)
+     
      *
-     *         sessionFactory.close() в отдельный блок finally или метод
-     *         в конце?
+     *https://www.geeksforgeeks.org/servlet-crud-operation-with-example/
+     *
+     *
+     *
+     *
+     *
+     *         package foobar;
+     *
+     * import org.flywaydb.core.Flyway;
+     *
+     * public class App {
+     *     public static void main(String[] args) {
+     *
+     *         // Create the Flyway instance and point it to the database
+     *         Flyway flyway =
+     *                 Flyway.configure()
+     *                       .dataSource( "jdbc:h2:file:./target/foobar" , "scott" , "tiger" )  // (url, user, password)
+     *                       .load()                                                            // Returns a `Flyway` object.
+     *         ;
+     *
+     *         // Start the migration
+     *         flyway.migrate();
+     *
+     *     }
+     * }
      */
 }
