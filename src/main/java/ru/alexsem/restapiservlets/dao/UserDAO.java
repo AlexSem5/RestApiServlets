@@ -20,9 +20,6 @@ public class UserDAO {
     private static SessionFactory sessionFactory;
     private static UserDAO userDAO;
     //        По умолчанию класс Configuration читает конфигурацию из hibernate.properties
-//    private UserDAO() {
-//        sessionFactory = SessionFactoryClass.getInstance();
-//    }
     
     private UserDAO() {
     }

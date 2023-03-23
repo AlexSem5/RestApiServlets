@@ -16,12 +16,20 @@ import java.util.List;
 
 @WebServlet(name = "getUsers", value = "/api/v1/users")
 public class GetAllUsersServlet extends HttpServlet {
+    
+    private UserDAO userDAO;
+    
+    @Override
+    public void init() throws ServletException {
+        userDAO = UserDAO.getInstance();
+    }
+    
     @Override
     protected void doGet(HttpServletRequest req,
                          HttpServletResponse resp)
             throws ServletException, IOException {
         resp.setContentType("text/html");
-        List<User> users = UserDAO.getInstance().index();
+        List<User> users = userDAO.index();
         PrintWriter out = resp.getWriter();
         ObjectMapper objectMapper = new ObjectMapper();
         out.println("<html><body>");
