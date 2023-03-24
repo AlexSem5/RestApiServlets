@@ -1,7 +1,9 @@
 package ru.alexsem.restapiservlets.models;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 
@@ -16,7 +18,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "Event")
-@Data
+@Getter @Setter
 @NoArgsConstructor
 public class Event {
     @Id

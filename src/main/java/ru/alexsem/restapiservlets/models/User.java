@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "User")
-@Data
+@Getter @Setter
 @NoArgsConstructor
 public class User {
     @Id
@@ -38,6 +38,13 @@ public class User {
     
     public User(String name) {
         this.name = name;
+    }
+    
+    @Override
+    public String toString() {
+        return "User{" +
+               "name='" + name + '\'' +
+               '}';
     }
     
     /**

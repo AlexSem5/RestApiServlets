@@ -2,6 +2,10 @@ package ru.alexsem.restapiservlets.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.modelmapper.ModelMapper;
+import ru.alexsem.restapiservlets.DTO.UserDTO;
+import ru.alexsem.restapiservlets.config.ObjectMapperClass;
+import ru.alexsem.restapiservlets.config.UserModelMapper;
 import ru.alexsem.restapiservlets.dao.UserDAO;
 import ru.alexsem.restapiservlets.models.User;
 
@@ -15,13 +19,16 @@ import java.io.PrintWriter;
 import java.util.List;
 
 @WebServlet(name = "getUsers", value = "/api/v1/users")
-public class GetAllUsersServlet extends HttpServlet {
-    
+public class UserGetPostServlet extends HttpServlet {
     private UserDAO userDAO;
+    private ModelMapper modelMapper;
+    private ObjectMapper objectMapper;
     
     @Override
     public void init() throws ServletException {
         userDAO = UserDAO.getInstance();
+        modelMapper = UserModelMapper.getInstance();
+        objectMapper = ObjectMapperClass.getInstance();
     }
     
     @Override
@@ -31,11 +38,11 @@ public class GetAllUsersServlet extends HttpServlet {
         resp.setContentType("text/html");
         List<User> users = userDAO.index();
         PrintWriter out = resp.getWriter();
-        ObjectMapper objectMapper = new ObjectMapper();
         out.println("<html><body>");
         users.forEach(user -> {
             try {
-                out.println(objectMapper.writeValueAsString(user));
+                out.println(objectMapper.writeValueAsString(
+                        modelMapper.map(user, UserDTO.class)));
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
             }

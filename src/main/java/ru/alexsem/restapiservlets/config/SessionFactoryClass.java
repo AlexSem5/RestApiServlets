@@ -23,8 +23,6 @@ public class SessionFactoryClass {
     public static SessionFactory getInstance() {
         if (sessionFactory == null) {
             Configuration configuration = new Configuration()
-                    .addAnnotatedClass(Event.class)
-                    .addAnnotatedClass(File.class)
                     .addAnnotatedClass(User.class);
             sessionFactory = configuration.buildSessionFactory();
         }

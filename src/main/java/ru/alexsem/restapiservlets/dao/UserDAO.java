@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class UserDAO {
     /**
-     * Где закрывать sessionFactory (sessionFactory.close())?
+     * ВОПРОС: Где закрывается sessionFactory (sessionFactory.close())?
      */
     private static SessionFactory sessionFactory;
     private static UserDAO userDAO;
