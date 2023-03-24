@@ -2,6 +2,9 @@ package ru.alexsem.restapiservlets.config;
 
 import org.modelmapper.ModelMapper;
 
+/**
+ * Singleton
+ */
 public class UserModelMapper {
     
     private static ModelMapper modelMapper;

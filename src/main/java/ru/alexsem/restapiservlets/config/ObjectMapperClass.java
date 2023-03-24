@@ -2,6 +2,9 @@ package ru.alexsem.restapiservlets.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Singleton
+ */
 public class ObjectMapperClass {
     private static ObjectMapper objectMapper;
     

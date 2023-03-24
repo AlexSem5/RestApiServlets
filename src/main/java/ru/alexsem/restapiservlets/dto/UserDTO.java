@@ -1,4 +1,4 @@
-package ru.alexsem.restapiservlets.DTO;
+package ru.alexsem.restapiservlets.dto;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,5 @@
-1) Где закрывается sessionFactory (sessionFactory.close())?
-2) В классе User переопределён toString (выводить должны только name).
+1) hibernate.properties правильно указаны? Нужно ли исп-ть datasource (т.к. используем сервер Tomcat,
+ как в Spring)?
+2) Где закрывается sessionFactory (sessionFactory.close())?
+3) В классе User переопределён toString (выводить должны только name).
 Но на клиенте всё-равно получаем все поля, включая id.
-Также получаем исключение, если пытаемся прочитать Users:
-org.hibernate.AnnotationException: Use of @OneToMany or @ManyToMany
-targeting an unmapped class: ru.alexsem.restapiservlets.models.User.events[ru.alexsem.restapiservlets.models.Event]

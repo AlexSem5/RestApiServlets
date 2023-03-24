@@ -102,4 +102,4 @@ target
 out
 
 #properties
-*.properties
+#*.properties

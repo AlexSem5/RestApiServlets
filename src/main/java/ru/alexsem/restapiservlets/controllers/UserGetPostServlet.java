@@ -3,7 +3,7 @@ package ru.alexsem.restapiservlets.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
-import ru.alexsem.restapiservlets.DTO.UserDTO;
+import ru.alexsem.restapiservlets.dto.UserDTO;
 import ru.alexsem.restapiservlets.config.ObjectMapperClass;
 import ru.alexsem.restapiservlets.config.UserModelMapper;
 import ru.alexsem.restapiservlets.dao.UserDAO;
@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
-@WebServlet(name = "getUsers", value = "/api/v1/users")
+@WebServlet(name = "getPostUsers", value = "/api/v1/users")
 public class UserGetPostServlet extends HttpServlet {
     private UserDAO userDAO;
     private ModelMapper modelMapper;
