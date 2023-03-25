@@ -2,9 +2,7 @@ package ru.alexsem.restapiservlets.dao;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import ru.alexsem.restapiservlets.config.SessionFactoryClass;
-import ru.alexsem.restapiservlets.models.Event;
 import ru.alexsem.restapiservlets.models.File;
 import ru.alexsem.restapiservlets.models.User;
 
@@ -14,92 +12,91 @@ import java.util.List;
 /**
  * Singleton
  */
-public class UserDAO {
-    /**
-     * ВОПРОС: Где закрывается sessionFactory (sessionFactory.close())?
-     */
+public class FileDAO {
     private static SessionFactory sessionFactory;
-    private static UserDAO userDAO;
     
-    private UserDAO() {
+    private static FileDAO fileDAO;
+    
+    private FileDAO() {
     }
     
     //        По умолчанию класс Configuration читает конфигурацию из hibernate.properties
-    public static UserDAO getInstance() {
+    public static FileDAO getInstance() {
         sessionFactory = SessionFactoryClass.getInstance();
-        if (userDAO == null) {
-            userDAO = new UserDAO();
+        if (fileDAO == null) {
+            fileDAO = new FileDAO();
         }
-        return userDAO;
+        return fileDAO;
     }
     
-    public List<User> index() {
+    public List<File> index() {
 //    Сессия для работы с Hibernate
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-//       or session.createQuery("from Person");
-        List<User> users = session.createQuery("select u from User u", User.class)
+//       or session.createQuery("from File");
+        List<File> files = session.createQuery("select f from File f", File.class)
                                   .getResultList();
 //    когда происходит коммит транзакции hibernate автоматически
 //    вызывает session.close() и закрывает текущую сессию.
         session.getTransaction().commit();
-        return users;
+        return files;
     }
     
-    public User show(int id) {
+    public File show(int id) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        User user = session.get(User.class, id);
+        File file = session.get(File.class, id);
         session.getTransaction().commit();
-        return user;
+        return file;
     }
     
-    public void save(User user) {
+    public void save(File file) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        session.save(user);
-//        Это можно сделать на стороне Event?:
-        user.setEvents(new ArrayList<>());
+        session.save(file);
         session.getTransaction().commit();
     }
     
     /**
-     * Обновляем сущность User
+     * Обновляем сущность File
      *
      * @param id          id текушей сущности
-     * @param updatedUser берём обновлённые данные из этого объекта
+     * @param updatedFile берём обновлённые данные из этого объекта
      */
-    public void update(int id, User updatedUser) {
+    public void update(int id, File updatedFile) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        User userToBeUpdated = session.get(User.class, id);
+        File fileToBeUpdated = session.get(File.class, id);
 //        Находимся внутри транзакции. Объект находится в состоянии persistent(managed) -
 //        в области persistent context. Вызов сеттера породит SQL-запрос.
-        userToBeUpdated.setName(updatedUser.getName());
-        if (updatedUser.getEvents() != null) {
-            userToBeUpdated.setEvents(updatedUser.getEvents());
+        fileToBeUpdated.setName(updatedFile.getName());
+        fileToBeUpdated.setFilePath(updatedFile.getFilePath());
+        if (updatedFile.getEvent() != null) {
+            fileToBeUpdated.setEvent(updatedFile.getEvent());
 //            С двух сторон вносим изменения, чтобы в кэш была актуальная инф-ция
-            updatedUser.getEvents().forEach(event -> event.setUser(userToBeUpdated));
-        } else {
-            userToBeUpdated.setEvents(new ArrayList<>());
+            updatedFile.getEvent().setFile(fileToBeUpdated);
         }
         session.getTransaction().commit();
     }
     
     /**
-     * Удаляем User с учётом каскадирования в бд (on delete cascade)
+     * Удаляем File с учётом каскадирования в бд (on delete cascade)
      *
-     * @param id user id
+     * @param id file id
      */
     public void delete(int id) {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        User user = session.get(User.class, id);
+        File file = session.get(File.class, id);
 //      Команда породит SQL запрос к БД, она сделает каскадирование и удалит
-//      связанные записи в БД:
-        session.remove(user);
+//      связанные записи в БД (Event):
+        session.remove(file);
 //       Сделаем, чтобы в кэш Hibernate каждая связанная сущность была удалена:
-        user.getEvents().clear();
+        file.getEvent().setFile(null);
         session.getTransaction().commit();
     }
 }
+
+
+
+

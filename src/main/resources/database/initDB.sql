@@ -16,10 +16,10 @@ FROM user;
 CREATE TABLE IF NOT EXISTS Event
 (
     id      INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT,
+    user_id INT NOT NULL ,
     FOREIGN KEY (user_id) REFERENCES User (id)
         ON DELETE CASCADE,
-    file_id INT UNIQUE,
+    file_id INT NOT NULL UNIQUE,
     FOREIGN KEY (file_id) REFERENCES File (id)
         ON DELETE CASCADE
 );

@@ -4,12 +4,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import ru.alexsem.restapiservlets.config.ObjectMapperClass;
 import ru.alexsem.restapiservlets.config.UserModelMapper;
+import ru.alexsem.restapiservlets.dao.FileDAO;
 import ru.alexsem.restapiservlets.dao.UserDAO;
+import ru.alexsem.restapiservlets.dto.FileDTO;
 import ru.alexsem.restapiservlets.dto.UserDTO;
+import ru.alexsem.restapiservlets.models.File;
 import ru.alexsem.restapiservlets.models.User;
-import ru.alexsem.restapiservlets.util.IncorrectParameterException;
+import ru.alexsem.restapiservlets.util.FileNotCreatedException;
 import ru.alexsem.restapiservlets.util.UserNotCreatedException;
-import ru.alexsem.restapiservlets.util.UserNotFoundException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,18 +22,22 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.stream.Collectors;
 
-@WebServlet(name = "getPutDeleteUsers", value = "/api/v1/users/*")
-public class UserGetPutDeleteServlet extends HttpServlet {
-    
-    private UserDAO userDAO;
+/**
+ * Create File,
+ * Read Files
+ */
+@WebServlet(name = "getPostFiles", value = "/api/v1/files")
+public class FileGetPostServlet extends HttpServlet {
+    private FileDAO fileDAO;
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
     
     @Override
     public void init() throws ServletException {
-        userDAO = UserDAO.getInstance();
+        fileDAO = FileDAO.getInstance();
         modelMapper = UserModelMapper.getInstance();
         objectMapper = ObjectMapperClass.getInstance();
     }
@@ -41,16 +47,17 @@ public class UserGetPutDeleteServlet extends HttpServlet {
                          HttpServletResponse resp)
             throws ServletException, IOException {
         resp.setContentType("application/json");
-        int id = getId(req);
-        User user = userDAO.show(id);
+        List<FileDTO> fileDTOS = fileDAO.index()
+                                        .stream()
+                                        .map(file -> modelMapper.map(file, FileDTO.class))
+                                        .toList();
         PrintWriter out = resp.getWriter();
-        out.println(objectMapper.writeValueAsString(
-                modelMapper.map(user, UserDTO.class)));
+        out.println(objectMapper.writeValueAsString(fileDTOS));
     }
     
     @Override
-    protected void doPut(HttpServletRequest req,
-                         HttpServletResponse resp)
+    protected void doPost(HttpServletRequest req,
+                          HttpServletResponse resp)
             throws ServletException, IOException {
         resp.setContentType("application/json");
         String jsonBody = new BufferedReader(
@@ -58,28 +65,9 @@ public class UserGetPutDeleteServlet extends HttpServlet {
                 .lines()
                 .collect(Collectors.joining("\n"));
         if (jsonBody == null || jsonBody.isBlank()) {
-            throw new UserNotFoundException("User was not found");
+            throw new FileNotCreatedException("File was not created");
         }
-        UserDTO userDTO = objectMapper.readValue(jsonBody, UserDTO.class);
-        int id = getId(req);
-        userDAO.update(id, modelMapper.map(userDTO, User.class));
-    }
-    
-    @Override
-    protected void doDelete(HttpServletRequest req,
-                            HttpServletResponse resp)
-            throws ServletException, IOException {
-        resp.setContentType("application/json");
-        int id = getId(req);
-        userDAO.delete(id);
-    }
-    
-    private int getId(HttpServletRequest req) {
-        String pathInfo = req.getPathInfo();
-        String[] path = pathInfo.split("/");
-        if (path[1] == null) {
-            throw new IncorrectParameterException("Incorrect parameter");
-        }
-        return Integer.parseInt(path[1]);
+        FileDTO fileDTO = objectMapper.readValue(jsonBody, FileDTO.class);
+        fileDAO.save(modelMapper.map(fileDTO, File.class));
     }
 }
