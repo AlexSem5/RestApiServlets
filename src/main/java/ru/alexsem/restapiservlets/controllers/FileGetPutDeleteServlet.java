@@ -4,12 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import ru.alexsem.restapiservlets.config.ObjectMapperClass;
 import ru.alexsem.restapiservlets.config.UserModelMapper;
-import ru.alexsem.restapiservlets.dao.UserDAO;
+import ru.alexsem.restapiservlets.dao.FileDAO;
+import ru.alexsem.restapiservlets.dto.FileDTO;
 import ru.alexsem.restapiservlets.dto.UserDTO;
+import ru.alexsem.restapiservlets.models.File;
 import ru.alexsem.restapiservlets.models.User;
+import ru.alexsem.restapiservlets.util.IncorrectFileException;
 import ru.alexsem.restapiservlets.util.IncorrectURLException;
-import ru.alexsem.restapiservlets.util.IncorrectUserException;
-import ru.alexsem.restapiservlets.util.UserNotCreatedException;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -23,19 +24,17 @@ import java.io.PrintWriter;
 import java.util.stream.Collectors;
 
 /**
- * Read, Update, Delete User
+ * Read, Update, Delete File
  */
-
-@WebServlet(name = "getPutDeleteUsers", value = "/api/v1/users/*")
-public class UserGetPutDeleteServlet extends HttpServlet {
-    
-    private UserDAO userDAO;
+@WebServlet(name = "getPutDeleteFiles", value = "/api/v1/files/*")
+public class FileGetPutDeleteServlet extends HttpServlet {
+    private FileDAO fileDAO;
     private ModelMapper modelMapper;
     private ObjectMapper objectMapper;
     
     @Override
     public void init() throws ServletException {
-        userDAO = UserDAO.getInstance();
+        fileDAO = FileDAO.getInstance();
         modelMapper = UserModelMapper.getInstance();
         objectMapper = ObjectMapperClass.getInstance();
     }
@@ -46,10 +45,10 @@ public class UserGetPutDeleteServlet extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("application/json");
         int id = getId(req);
-        User user = userDAO.show(id);
+        File file = fileDAO.show(id);
         PrintWriter out = resp.getWriter();
         out.println(objectMapper.writeValueAsString(
-                modelMapper.map(user, UserDTO.class)));
+                modelMapper.map(file, FileDTO.class)));
     }
     
     @Override
@@ -62,11 +61,11 @@ public class UserGetPutDeleteServlet extends HttpServlet {
                 .lines()
                 .collect(Collectors.joining("\n"));
         if (jsonBody == null || jsonBody.isBlank()) {
-            throw new IncorrectUserException("User is incorrect");
+            throw new IncorrectFileException("File is incorrect");
         }
-        UserDTO userDTO = objectMapper.readValue(jsonBody, UserDTO.class);
+        FileDTO fileDTO = objectMapper.readValue(jsonBody, FileDTO.class);
         int id = getId(req);
-        userDAO.update(id, modelMapper.map(userDTO, User.class));
+        fileDAO.update(id, modelMapper.map(fileDTO, File.class));
     }
     
     @Override
@@ -75,7 +74,7 @@ public class UserGetPutDeleteServlet extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("application/json");
         int id = getId(req);
-        userDAO.delete(id);
+        fileDAO.delete(id);
     }
     
     private int getId(HttpServletRequest req) {

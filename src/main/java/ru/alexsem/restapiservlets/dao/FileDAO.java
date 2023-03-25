@@ -92,7 +92,9 @@ public class FileDAO {
 //      связанные записи в БД (Event):
         session.remove(file);
 //       Сделаем, чтобы в кэш Hibernate каждая связанная сущность была удалена:
-        file.getEvent().setFile(null);
+        if (file.getEvent() != null) {
+            file.getEvent().setFile(null);
+        }
         session.getTransaction().commit();
     }
 }
