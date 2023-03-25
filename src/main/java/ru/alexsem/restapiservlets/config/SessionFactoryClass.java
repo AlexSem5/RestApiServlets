@@ -6,10 +6,10 @@ import ru.alexsem.restapiservlets.models.Event;
 import ru.alexsem.restapiservlets.models.File;
 import ru.alexsem.restapiservlets.models.User;
 
+/**
+ * Singleton
+ */
 public class SessionFactoryClass {
-    /**
-     * Singleton sessionFactory
-     */
     private static SessionFactory sessionFactory;
     
     private SessionFactoryClass() {
