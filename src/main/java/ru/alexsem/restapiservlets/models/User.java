@@ -1,5 +1,6 @@
 package ru.alexsem.restapiservlets.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 
@@ -34,6 +35,7 @@ public class User {
     //Если сохраняем человека, то автоматически сохраняется связанная сущность
 //    Можем добавить каскадир других операций (on delete уже настроено на стороне БД)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @JsonIgnore
     private List<Event> events;
     
     public User(String name) {

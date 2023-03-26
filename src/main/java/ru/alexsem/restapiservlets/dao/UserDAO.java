@@ -1,5 +1,6 @@
 package ru.alexsem.restapiservlets.dao;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -58,8 +59,7 @@ public class UserDAO {
         Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         session.save(user);
-//        Это можно сделать на стороне Event?:
-        user.setEvents(new ArrayList<>());
+//        user.setEvents(new ArrayList<>()); - сделал на стороне Event. Здесь почему-то не срабатывает (nullPointerEx)
         session.getTransaction().commit();
     }
     

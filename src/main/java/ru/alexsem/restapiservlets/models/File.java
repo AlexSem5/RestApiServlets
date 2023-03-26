@@ -1,5 +1,6 @@
 package ru.alexsem.restapiservlets.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +38,7 @@ public class File {
     //  (cсылаемся на поле owning side)
     @OneToOne(mappedBy = "file", fetch = FetchType.LAZY)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @JsonIgnore
     private Event event;
     
     public File(String name, String filePath) {

@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS Event
 );
 
 INSERT INTO event(user_id, file_id)
-VALUES (1, 1);
+VALUES (3, 1);
 
 
 CREATE TABLE IF NOT EXISTS File
