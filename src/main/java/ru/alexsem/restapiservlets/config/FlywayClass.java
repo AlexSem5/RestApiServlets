@@ -16,7 +16,7 @@ public class FlywayClass {
         if (flyway == null) {
             flyway = Flyway.configure()
                            .dataSource(
-                                   "jdbc:mysql://localhost:3306/restapiservlets",
+                                   "jdbc:mysql://localhost:3306/restapiservlets?serverTimezone=UTC",
                                    "root",
                                    "password")
                            .load();

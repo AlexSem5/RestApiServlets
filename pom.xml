@@ -27,11 +27,13 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.30</version>
+            <version>8.0.21</version>
         </dependency>
+
 
         <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
@@ -48,11 +50,15 @@
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
+        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>9.16.1</version>
+            <version>8.0.2</version>
         </dependency>
+
+
 
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
