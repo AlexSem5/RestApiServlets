@@ -22,6 +22,7 @@ public class SessionFactoryClass {
      */
     public static SessionFactory getInstance() {
         if (sessionFactory == null) {
+            FlywayClass.getInstance().migrate();
             Configuration configuration = new Configuration()
                     .addAnnotatedClass(User.class)
                     .addAnnotatedClass(Event.class)

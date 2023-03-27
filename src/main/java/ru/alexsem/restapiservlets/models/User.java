@@ -48,33 +48,4 @@ public class User {
                "name='" + name + '\'' +
                '}';
     }
-    /**
-     
-     *
-     *https://www.geeksforgeeks.org/servlet-crud-operation-with-example/
-     *
-     *
-     *
-     *
-     *
-     *         package foobar;
-     *
-     * import org.flywaydb.core.Flyway;
-     *
-     * public class App {
-     *     public static void main(String[] args) {
-     *
-     *         // Create the Flyway instance and point it to the database
-     *         Flyway flyway =
-     *                 Flyway.configure()
-     *                       .dataSource( "jdbc:h2:file:./target/foobar" , "scott" , "tiger" )  // (url, user, password)
-     *                       .load()                                                            // Returns a `Flyway` object.
-     *         ;
-     *
-     *         // Start the migration
-     *         flyway.migrate();
-     *
-     *     }
-     * }
-     */
 }

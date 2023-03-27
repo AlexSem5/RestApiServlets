@@ -36,7 +36,7 @@ public class File {
     
     //  Название поля с аннотацией @JoinColumn в доч таблице:
     //  (cсылаемся на поле owning side)
-    @OneToOne(mappedBy = "file", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "file", fetch = FetchType.EAGER)
     @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JsonIgnore
     private Event event;
