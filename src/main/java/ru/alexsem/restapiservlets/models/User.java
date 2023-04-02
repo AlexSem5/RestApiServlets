@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,6 +30,11 @@ public class User {
     @Column(name = "name")
     private String name;
     
+    /**
+     * The mapping definition consists of 2 parts:
+     * the to-many side of the association which owns the relationship mapping and
+     * the to-one side which just references the mapping
+     */
 //  Lazy - связанные товары загрузятся только по запросу (вызов геттера)
 //  Ссылаемся на поле owning side с аннотацией @JoinColumn в доч таблице
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -47,5 +53,13 @@ public class User {
         return "User{" +
                "name='" + name + '\'' +
                '}';
+    }
+    
+    public void addEvent(Event event) {
+        if (this.events == null) {
+            this.events = new ArrayList<>();
+        }
+        this.events.add(event);
+        event.setUser(this);
     }
 }

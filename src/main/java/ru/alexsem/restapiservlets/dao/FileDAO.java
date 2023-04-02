@@ -58,7 +58,8 @@ public class FileDAO {
     }
     
     /**
-     * Обновляем сущность File
+     * НЕПРАВИЛЬНО СДЕЛАНО (см Rest APP).
+     * Also consider a utility method which updates both entities
      *
      * @param id          id текушей сущности
      * @param updatedFile берём обновлённые данные из этого объекта

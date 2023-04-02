@@ -45,4 +45,11 @@ public class File {
         this.name = name;
         this.filePath = filePath;
     }
+    /**
+     * //    Двухстороння связь
+     *     public void setPassport(Passport passport) {
+     *         this.passport = passport;
+     *         passport.setOwner(this);
+     *     }
+     */
 }

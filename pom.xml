@@ -8,13 +8,21 @@
     <artifactId>RestApiServlets</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>RestApiServlets</name>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
         <junit.version>5.9.1</junit.version>
+        <javax.servlet.version>4.0.1</javax.servlet.version>
+        <mysql.version>8.0.21</mysql.version>
+        <hibernate.version>5.6.14.Final</hibernate.version>
+        <lombok.version>1.18.22</lombok.version>
+        <flywaydb.version>8.0.2</flywaydb.version>
+        <jackson.version>2.14.2</jackson.version>
+        <modelmapper.version>2.4.5</modelmapper.version>
+        <tomcat.plugin.version>2.2</tomcat.plugin.version>
     </properties>
 
     <dependencies>
@@ -22,56 +30,46 @@
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
-            <version>4.0.1</version>
+            <version>${javax.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.21</version>
+            <version>${mysql.version}</version>
         </dependency>
 
 
-        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-            <version>5.6.14.Final</version>
+            <version>${hibernate.version}</version>
         </dependency>
 
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.22</version>
+            <version>${lombok.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
-        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
-        <!-- https://mvnrepository.com/artifact/org.flywaydb/flyway-core -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
-            <version>8.0.2</version>
+            <version>${flywaydb.version}</version>
         </dependency>
 
-
-
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.2</version>
+            <version>${jackson.version}</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.modelmapper/modelmapper -->
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
-            <version>2.4.5</version>
+            <version>${modelmapper.version}</version>
         </dependency>
 
         <dependency>

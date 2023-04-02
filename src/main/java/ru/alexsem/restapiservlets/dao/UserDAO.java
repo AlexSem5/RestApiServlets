@@ -3,12 +3,15 @@ package ru.alexsem.restapiservlets.dao;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import ru.alexsem.restapiservlets.config.SessionFactoryClass;
 import ru.alexsem.restapiservlets.models.Event;
 import ru.alexsem.restapiservlets.models.File;
 import ru.alexsem.restapiservlets.models.User;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +21,7 @@ import java.util.List;
 public class UserDAO {
     /**
      * ВОПРОС: Где закрывается sessionFactory (sessionFactory.close())?
+     * Поля должны быть final?
      */
     private static SessionFactory sessionFactory;
     private static UserDAO userDAO;
@@ -35,55 +39,74 @@ public class UserDAO {
     }
     
     public List<User> index() {
-//    Сессия для работы с Hibernate
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-//       or session.createQuery("from Person");
-        List<User> users = session.createQuery("select u from User u", User.class)
-                                  .getResultList();
-//    когда происходит коммит транзакции hibernate автоматически
-//    вызывает session.close() и закрывает текущую сессию.
-        session.getTransaction().commit();
+        Session session = sessionFactory.openSession();
+        List<User> users = null;
+        try {
+            session.beginTransaction();
+//     or session.createQuery("from Person");
+            users = session.createQuery("select u from User u", User.class)
+                                      .getResultList();
+            session.getTransaction().commit();
+        } catch (RuntimeException e) {
+                session.getTransaction().rollback();
+                e.printStackTrace();
+        } finally {
+            session.close();
+        }
         return users;
     }
     
     public User show(int id) {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        User user = session.get(User.class, id);
-        session.getTransaction().commit();
+        Session session = sessionFactory.openSession();
+        User user = null;
+        try {
+            session.beginTransaction();
+            user = session.get(User.class, id);
+            session.getTransaction().commit();
+        } catch (RuntimeException e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
         return user;
     }
     
     public void save(User user) {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        session.save(user);
-//        user.setEvents(new ArrayList<>()); - сделал на стороне Event. Здесь почему-то не срабатывает (nullPointerEx)
-        session.getTransaction().commit();
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            session.save(user);
+            session.getTransaction().commit();
+        } catch (RuntimeException e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
     
     /**
-     * Обновляем сущность User
+     * Consider a utility method which updates both entities
+     * для добавления и обновления сущности используется один и тот же метод save(person)
      *
      * @param id          id текушей сущности
      * @param updatedUser берём обновлённые данные из этого объекта
      */
     public void update(int id, User updatedUser) {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        User userToBeUpdated = session.get(User.class, id);
-//        Находимся внутри транзакции. Объект находится в состоянии persistent(managed) -
-//        в области persistent context. Вызов сеттера породит SQL-запрос.
-        userToBeUpdated.setName(updatedUser.getName());
-        if (updatedUser.getEvents() != null) {
-            userToBeUpdated.setEvents(updatedUser.getEvents());
-//            С двух сторон вносим изменения, чтобы в кэш была актуальная инф-ция
-            updatedUser.getEvents().forEach(event -> event.setUser(userToBeUpdated));
-        } else {
-            userToBeUpdated.setEvents(new ArrayList<>());
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            updatedUser.setId(id);
+//            Обновит значения у существующего человека (по id найдёт его):
+            session.save(updatedUser);
+            session.getTransaction().commit();
+        } catch (RuntimeException e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
         }
-        session.getTransaction().commit();
     }
     
     /**
@@ -92,14 +115,21 @@ public class UserDAO {
      * @param id user id
      */
     public void delete(int id) {
-        Session session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
-        User user = session.get(User.class, id);
+        Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            User user = session.get(User.class, id);
 //      Команда породит SQL запрос к БД, она сделает каскадирование и удалит
 //      связанные записи в БД:
-        session.remove(user);
-//       Сделаем, чтобы в кэш Hibernate каждая связанная сущность была удалена:
-        user.getEvents().clear();
-        session.getTransaction().commit();
+            session.remove(user);
+//      Сделаем, чтобы в кэш Hibernate каждая связанная сущность была удалена:
+            user.getEvents().clear();
+            session.getTransaction().commit();
+        } catch (RuntimeException e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
     }
 }

@@ -55,18 +55,19 @@ public class EventDAO {
         session.beginTransaction();
         session.save(event);
 //  С двух сторон вносим изменения, чтобы в кэш была актуальная инф-ция
+//  См тему Cascade в проекте Hibernate  - можно вынести в отдельный метод addEvent()
         event.getFile().setEvent(event);
         if (event.getUser().getEvents() == null) {
             event.getUser().setEvents(
-                    new ArrayList<>(Collections.singletonList(event)));
-        } else {
-            event.getUser().getEvents().add(event);
+                    new ArrayList<>());
         }
+        event.getUser().getEvents().add(event);
         session.getTransaction().commit();
     }
     
     /**
-     * Обновляем сущность Event
+     * НЕПРАВИЛЬНО СДЕЛАНО (см Rest APP).
+     * Also consider a utility method which updates both entities
      *
      * @param id           id текушей сущности
      * @param updatedEvent берём обновлённые данные из этого объекта
